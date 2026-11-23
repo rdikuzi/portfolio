@@ -1072,7 +1072,7 @@ html.has-cursor,html.has-cursor *{cursor:revert!important}
 }
 </style>
 </head>
-<body><div id="siteLoader" role="status" aria-live="polite"><div class="ld-box"><div class="ld-mark">&#10035; RDS</div><div class="ld-title">LOADING ARCHIVE</div><div class="ld-bar"><i id="ldFill"></i></div><div class="ld-pct" id="ldPct">0%</div></div></div>
+<body>
 <div aria-hidden="true" id="sigilBackdrop">
 <svg preserveaspectratio="xMidYMid slice" viewbox="0 0 1600 1000">
 <g class="sigil-lines" opacity=".7">
@@ -1542,15 +1542,6 @@ html body .home-hero-portrait::after{-webkit-mask-image:none!important;mask-imag
 .fcar,.fcar *{pointer-events:none!important;cursor:default!important;user-select:none}
 .fcar-btn{display:none!important}
 
-/* loading screen: the site is revealed only once every page image is ready */
-#siteLoader{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 45%,#16122e,#05050a 70%);transition:opacity .6s ease,visibility .6s}
-#siteLoader.done{opacity:0;visibility:hidden;pointer-events:none}
-.ld-box{width:min(320px,80vw);text-align:center;font-family:var(--mono,monospace);color:var(--text,#f5f2fc)}
-.ld-mark{font:600 1.6rem var(--serif,serif);letter-spacing:.14em;margin-bottom:18px}
-.ld-title{font-size:.72rem;letter-spacing:.28em;color:var(--accent,#a9bdff);margin-bottom:12px}
-.ld-bar{height:6px;border:1px solid var(--line,rgba(190,175,255,.3));border-radius:3px;overflow:hidden;background:rgba(255,255,255,.04)}
-.ld-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7b68ee,#b99cff);transition:width .25s ease}
-.ld-pct{margin-top:10px;font-size:.72rem;letter-spacing:.2em;color:var(--muted,#cdc8dc)}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
@@ -1568,17 +1559,10 @@ html body .home-hero-portrait::after{-webkit-mask-image:none!important;mask-imag
  window.addEventListener('resize',function(){set(i,false)});sync();
 })();
 
+/* silent background preload: every page image is fetched and decoded while the entry screen is showing,
+   so screens appear instantly and smoothly (no loading screen is displayed) */
 (function(){
- var L=document.getElementById('siteLoader'); if(!L)return;
- var fill=document.getElementById('ldFill'),pct=document.getElementById('ldPct'),done=false;
- var urls=[].slice.call(document.querySelectorAll('img')).map(function(i){return i.currentSrc||i.src}).filter(Boolean);
- var seen={},list=[];urls.forEach(function(u){if(!seen[u]){seen[u]=1;list.push(u)}});
- var total=list.length+1,got=0;
- function tick(){got++;var p=Math.min(100,Math.round(got/total*100));fill.style.width=p+'%';pct.textContent=p+'%';if(got>=total)finish()}
- function finish(){if(done)return;done=true;fill.style.width='100%';pct.textContent='100%';setTimeout(function(){L.classList.add('done');setTimeout(function(){L.remove()},800)},250)}
- list.forEach(function(u){var im=new Image();im.onload=im.onerror=tick;im.src=u;if(im.decode)im.decode().catch(function(){})});
- var fr=document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve();fr.then(tick,tick);
- setTimeout(finish,15000);
+ var seen={};[].slice.call(document.querySelectorAll('img')).forEach(function(i){var u=i.currentSrc||i.src;if(!u||seen[u])return;seen[u]=1;var im=new Image();im.decoding='async';im.src=u;if(im.decode)im.decode().catch(function(){})});
 })();
 </script>
 </body></html>
