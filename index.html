@@ -1071,7 +1071,40 @@ html.has-cursor,html.has-cursor *{cursor:revert!important}
  .pdx-chips li{padding:4px 8px;font-size:12px}
 }
 </style>
-</head>
+<style id="ff-hero-early">/* ===== HOMEPAGE: full-length standing photo, cut out and blended into the scene ===== */
+html body #titleScreen .hero-portrait{-webkit-mask-image:none!important;mask-image:none!important;width:62%;right:0;overflow:visible}
+html body #titleScreen .hero-portrait img{top:auto!important;bottom:clamp(14px,3.2vh,34px)!important;height:min(85%,calc(100vh - 70px))!important;width:auto!important;max-width:none!important;left:0!important;right:0!important;margin:0 auto!important;aspect-ratio:450/1500!important;transform:none!important;animation:none!important;transition:none!important;object-fit:contain!important;object-position:center bottom!important;
+ -webkit-mask-image:none!important;mask-image:none!important;
+ filter:saturate(.92) contrast(1.05) brightness(1.02) drop-shadow(0 0 1.5px rgba(200,180,255,.5)) drop-shadow(0 0 26px rgba(150,120,255,.3)) drop-shadow(0 20px 26px rgba(0,0,0,.6))!important}
+html body #titleScreen .hero-portrait::before{inset:6% 6% 0!important;background:radial-gradient(ellipse 46% 60% at 50% 52%,rgba(150,120,255,.34),rgba(70,60,170,.12) 52%,transparent 74%)!important;filter:blur(12px)}
+html body #titleScreen .hero-portrait::after{display:block!important;content:"";position:absolute;left:50%;bottom:clamp(8px,2.2vh,26px);width:min(46%,300px);height:clamp(16px,3vh,30px);transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(0,0,0,.75),rgba(0,0,0,.35) 45%,transparent 72%);filter:blur(5px);z-index:-1;mix-blend-mode:normal;pointer-events:none}
+@media(max-width:900px){
+ html body #titleScreen .hero-portrait{width:100%;top:48px;bottom:auto;height:56%}
+ html body #titleScreen .hero-portrait img{bottom:3%!important;height:90%!important}
+ html body #titleScreen .hero-portrait::after{bottom:0}
+ html body #titleScreen .title-main{align-items:flex-end}
+ html body #titleScreen .title-copy h1{font-size:clamp(3rem,13vw,4.6rem)}
+}
+/* welcome screen (00 HOME) uses the same cut-out */
+html body .home-hero-portrait{position:absolute;inset:0;z-index:0;overflow:hidden}
+html body .home-hero-portrait img{position:absolute!important;inset:auto!important;top:auto!important;left:auto!important;right:clamp(16px,7vw,120px)!important;bottom:clamp(8px,2vh,24px)!important;height:min(85%,calc(100% - 30px))!important;width:auto!important;max-width:60%!important;object-fit:contain!important;object-position:center bottom!important;opacity:1!important;
+ -webkit-mask-image:none!important;mask-image:none!important;
+ filter:saturate(.92) contrast(1.05) brightness(1.02) drop-shadow(0 0 1.5px rgba(200,180,255,.5)) drop-shadow(0 0 24px rgba(150,120,255,.28)) drop-shadow(0 18px 24px rgba(0,0,0,.6))!important}
+html body .home-hero-portrait::after{-webkit-mask-image:none!important;mask-image:none!important;background:radial-gradient(ellipse 40% 60% at 70% 55%,rgba(150,120,255,.22),transparent 70%)!important;mix-blend-mode:screen}
+@media(max-width:900px){
+ html body .home-hero-portrait{bottom:auto;height:58%}
+ html body .home-hero-portrait img{right:50%!important;transform:translateX(50%)!important;max-width:90%!important;height:98%!important}
+}
+
+/* friends carousel: automatic, nothing clickable */
+.fcar,.fcar *{pointer-events:none!important;cursor:default!important;user-select:none}
+.fcar-btn{display:none!important}
+
+
+/* homepage photo stays perfectly still: fixed box from first paint, no transform, no animation */
+html body #titleScreen .hero-portrait,html body #titleScreen .hero-portrait *{animation:none!important;transition:none!important}
+html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/1500!important}
+</style></head>
 <body>
 <div aria-hidden="true" id="sigilBackdrop">
 <svg preserveaspectratio="xMidYMid slice" viewbox="0 0 1600 1000">
@@ -1515,7 +1548,7 @@ addEventListener('load',()=>setTimeout(fitActive,100));
 }
 /* ===== HOMEPAGE: full-length standing photo, cut out and blended into the scene ===== */
 html body #titleScreen .hero-portrait{-webkit-mask-image:none!important;mask-image:none!important;width:62%;right:0;overflow:visible}
-html body #titleScreen .hero-portrait img{top:auto!important;bottom:clamp(14px,3.2vh,34px)!important;height:min(85%,calc(100vh - 70px))!important;width:auto!important;max-width:none!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;object-fit:contain!important;object-position:center bottom!important;
+html body #titleScreen .hero-portrait img{top:auto!important;bottom:clamp(14px,3.2vh,34px)!important;height:min(85%,calc(100vh - 70px))!important;width:auto!important;max-width:none!important;left:0!important;right:0!important;margin:0 auto!important;aspect-ratio:450/1500!important;transform:none!important;animation:none!important;transition:none!important;object-fit:contain!important;object-position:center bottom!important;
  -webkit-mask-image:none!important;mask-image:none!important;
  filter:saturate(.92) contrast(1.05) brightness(1.02) drop-shadow(0 0 1.5px rgba(200,180,255,.5)) drop-shadow(0 0 26px rgba(150,120,255,.3)) drop-shadow(0 20px 26px rgba(0,0,0,.6))!important}
 html body #titleScreen .hero-portrait::before{inset:6% 6% 0!important;background:radial-gradient(ellipse 46% 60% at 50% 52%,rgba(150,120,255,.34),rgba(70,60,170,.12) 52%,transparent 74%)!important;filter:blur(12px)}
@@ -1542,6 +1575,10 @@ html body .home-hero-portrait::after{-webkit-mask-image:none!important;mask-imag
 .fcar,.fcar *{pointer-events:none!important;cursor:default!important;user-select:none}
 .fcar-btn{display:none!important}
 
+
+/* homepage photo stays perfectly still: fixed box from first paint, no transform, no animation */
+html body #titleScreen .hero-portrait,html body #titleScreen .hero-portrait *{animation:none!important;transition:none!important}
+html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/1500!important}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
