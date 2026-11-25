@@ -1600,7 +1600,7 @@ html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/
 }
 /* ===== HUD frames (lavender): cut corners + one accent bar; animated ===== */
 .fcard,.pdx-c{
- --hl:rgba(190,172,255,.55);--hb:#cdbdff;--hc:14px;
+ --hl:rgba(190,172,255,var(--pulse));--hb:#cdbdff;--hc:14px;
  border:1px solid var(--hl)!important;border-radius:0!important;
  clip-path:polygon(0 0,calc(100% - var(--hc)) 0,100% var(--hc),100% 100%,var(--hc) 100%,0 calc(100% - var(--hc)));
  background-origin:border-box;background-repeat:no-repeat;
@@ -1614,7 +1614,6 @@ html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/
 }
 .fcard{--fill:radial-gradient(ellipse at 0% 0%,rgba(150,120,255,.16),transparent 60%),linear-gradient(150deg,rgba(22,18,44,.82),rgba(8,8,16,.74))}
 .pdx-c{--fill:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));--hc:12px}
-.fcard:hover,.pdx-c:hover{--hl:rgba(215,200,255,.85)}
 @media(max-width:640px){.fcard,.pdx-c{--hc:10px}}
 
 /* Personal Information: tidy arrow-tag titles, aligned grid, bigger photo frame */
@@ -1637,28 +1636,68 @@ html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/
 }
 
 /* ===== motion ===== */
-@keyframes hudIn{from{opacity:0;filter:blur(6px) brightness(1.6)}to{opacity:1;filter:none}}
+@property --pulse{syntax:'<number>';inherits:true;initial-value:.55}
+:root{--pulse:.55}
+@keyframes hudIn{from{opacity:0;filter:blur(6px) brightness(1.7)}to{opacity:1;filter:none}}
+@keyframes hudGlow{0%,100%{--pulse:.35}50%{--pulse:1}}
 @keyframes hudSweep{0%{transform:translateX(-120%)}55%,100%{transform:translateX(900%)}}
-@keyframes hudPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes hudPulse{0%,100%{opacity:.45}50%{opacity:1}}
 @keyframes hudDots{to{background-position:20px 20px}}
-@keyframes hudBar{0%,100%{background-size:var(--hc) var(--hc),var(--hc) var(--hc),48px 3px,100% 100%}50%{background-size:var(--hc) var(--hc),var(--hc) var(--hc),84px 3px,100% 100%}}
-.screen[data-screen=about].active .pdx-c,.screen[data-screen=family].active .fcard{animation:hudIn .55s cubic-bezier(.2,.8,.2,1) both,hudBar 5s ease-in-out 1s infinite}
-.screen[data-screen=about].active .pdx-h{animation-delay:0s,1s}
-.screen[data-screen=about].active .pdx-id{animation-delay:.08s,1.3s}
-.screen[data-screen=about].active .pdx-ph2{animation-delay:.16s,1.6s}
-.screen[data-screen=about].active .pdx-ac{animation-delay:.24s,1.9s}
-.screen[data-screen=about].active .pdx-ct{animation-delay:.32s,2.2s}
-.screen[data-screen=about].active .pdx-tk{animation-delay:.4s,2.5s}
-.screen[data-screen=about].active .pdx-in{animation-delay:.48s,2.8s}
-.screen[data-screen=family].active .fc-mother{animation-delay:0s,1s}
-.screen[data-screen=family].active .fc-father{animation-delay:.1s,1.4s}
-.screen[data-screen=family].active .fc-sib{animation-delay:.2s,1.8s}
-.screen[data-screen=family].active .fc-friends{animation-delay:.3s,2.2s}
-.screen[data-screen=about].active .pdx{animation:hudDots 14s linear infinite}
-.screen[data-screen=about] .pdx-ph::before,.screen[data-screen=about] .pdx-ph::after{animation:hudPulse 2.6s ease-in-out infinite}
-.screen[data-screen=about] .pdx-h::after{content:"";position:absolute;top:0;bottom:0;left:0;width:70px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(215,200,255,.2),transparent);animation:hudSweep 7s ease-in-out infinite}
+@keyframes hudBar{0%,100%{background-size:var(--hc) var(--hc),var(--hc) var(--hc),48px 3px,100% 100%}50%{background-size:var(--hc) var(--hc),var(--hc) var(--hc),96px 3px,100% 100%}}
+@keyframes hudCell{from{opacity:0;filter:brightness(2) blur(3px)}to{opacity:1;filter:none}}
+@keyframes hudPhoto{0%,100%{filter:drop-shadow(0 0 4px rgba(150,120,255,.25))}50%{filter:drop-shadow(0 0 16px rgba(185,156,255,.75))}}
+@keyframes hudIcon{0%,100%{opacity:.5}50%{opacity:1}}
+.screen[data-screen=about].active .pdx-c,.screen[data-screen=family].active .fcard{
+ animation:hudIn .6s cubic-bezier(.2,.8,.2,1) both,hudBar 4s ease-in-out infinite,hudGlow 3.2s ease-in-out infinite;
+ animation-delay:var(--d,0s),calc(var(--d,0s) + .8s),calc(var(--d,0s) + .4s)}
+.screen[data-screen=about].active .pdx-h{--d:0.00s}
+.screen[data-screen=about].active .pdx-id{--d:0.08s}
+.screen[data-screen=about].active .pdx-ph2{--d:0.16s}
+.screen[data-screen=about].active .pdx-ac{--d:0.24s}
+.screen[data-screen=about].active .pdx-ct{--d:0.32s}
+.screen[data-screen=about].active .pdx-tk{--d:0.40s}
+.screen[data-screen=about].active .pdx-in{--d:0.48s}
+.screen[data-screen=family].active .fc-mother{--d:0.0s}
+.screen[data-screen=family].active .fc-father{--d:0.1s}
+.screen[data-screen=family].active .fc-sib{--d:0.2s}
+.screen[data-screen=family].active .fc-friends{--d:0.3s}
+.screen[data-screen=about].active .pdx-i:nth-child(1){animation-delay:calc(.35s + 45ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(2){animation-delay:calc(.35s + 90ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(3){animation-delay:calc(.35s + 135ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(4){animation-delay:calc(.35s + 180ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(5){animation-delay:calc(.35s + 225ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(6){animation-delay:calc(.35s + 270ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(7){animation-delay:calc(.35s + 315ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(8){animation-delay:calc(.35s + 360ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(9){animation-delay:calc(.35s + 405ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(10){animation-delay:calc(.35s + 450ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(11){animation-delay:calc(.35s + 495ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(12){animation-delay:calc(.35s + 540ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(13){animation-delay:calc(.35s + 585ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(14){animation-delay:calc(.35s + 630ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(15){animation-delay:calc(.35s + 675ms)}
+.screen[data-screen=about].active .pdx-i:nth-child(16){animation-delay:calc(.35s + 720ms)}
+.screen[data-screen=about].active .pdx-i{animation:hudCell .5s ease-out both}
+.screen[data-screen=about].active .pdx{animation:hudDots 12s linear infinite}
+.screen[data-screen=about] .pdx-ph img{animation:hudPhoto 3.6s ease-in-out infinite}
+.screen[data-screen=about] .pdx-ph::before,.screen[data-screen=about] .pdx-ph::after{animation:hudPulse 2.2s ease-in-out infinite}
+.screen[data-screen=about] .pdx-t svg{animation:hudIcon 2.4s ease-in-out infinite}
+.screen[data-screen=about] .pdx-h::after{content:"";position:absolute;top:0;bottom:0;left:0;width:80px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(215,200,255,.26),transparent);animation:hudSweep 6s ease-in-out infinite}
+/* hover: panels grow a little, cells light up */
+.pdx-c,.fcard{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+@media(hover:hover) and (pointer:fine){
+ .pdx-c:hover,.fcard:hover{transform:scale(1.03);z-index:6;--fill:linear-gradient(180deg,rgba(185,160,255,.2),rgba(255,255,255,.03))}
+ .pdx-i{transition:background .2s,box-shadow .2s,transform .2s}
+ .pdx-i:hover{background:rgba(185,160,255,.16);box-shadow:inset 3px 0 0 var(--hb);transform:translateX(2px)}
+ .pdx-b:hover,.pdx-in li:hover{transform:scale(1.07);transition:transform .2s}
+}
+/* room for the grow effect so nothing clips or scrolls */
+@media(min-width:901px){
+ .screen[data-screen=about] .pdx{overflow:visible}
+}
+.ff-stage{box-sizing:border-box;padding:10px;margin:-10px -10px calc(clamp(8px,1.3vh,14px) - 10px)}
 @media(prefers-reduced-motion:reduce){
- .screen .pdx-c,.screen .fcard,.screen .pdx,.screen .pdx-h::after,.screen .pdx-ph::before,.screen .pdx-ph::after{animation:none!important}
+ .screen *,.screen *::before,.screen *::after{animation:none!important}
 }
 </style>
 <script id="ff-js">(function(){
