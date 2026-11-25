@@ -1598,6 +1598,68 @@ html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/
  .fc-friends{flex-direction:column}
  .fc-friends .fphoto img{width:100%;max-width:100%;height:auto;max-height:none}
 }
+/* ===== HUD frames (lavender): cut corners + one accent bar; animated ===== */
+.fcard,.pdx-c{
+ --hl:rgba(190,172,255,.55);--hb:#cdbdff;--hc:14px;
+ border:1px solid var(--hl)!important;border-radius:0!important;
+ clip-path:polygon(0 0,calc(100% - var(--hc)) 0,100% var(--hc),100% 100%,var(--hc) 100%,0 calc(100% - var(--hc)));
+ background-origin:border-box;background-repeat:no-repeat;
+ background-image:
+  linear-gradient(to top right,transparent calc(50% - .6px),var(--hl) calc(50% - .6px),var(--hl) calc(50% + .6px),transparent calc(50% + .6px)),
+  linear-gradient(to top right,transparent calc(50% - .6px),var(--hl) calc(50% - .6px),var(--hl) calc(50% + .6px),transparent calc(50% + .6px)),
+  linear-gradient(90deg,var(--hb),var(--hb)),
+  var(--fill);
+ background-size:var(--hc) var(--hc),var(--hc) var(--hc),48px 3px,100% 100%;
+ background-position:100% 0,0 100%,20px 0,0 0;
+}
+.fcard{--fill:radial-gradient(ellipse at 0% 0%,rgba(150,120,255,.16),transparent 60%),linear-gradient(150deg,rgba(22,18,44,.82),rgba(8,8,16,.74))}
+.pdx-c{--fill:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));--hc:12px}
+.fcard:hover,.pdx-c:hover{--hl:rgba(215,200,255,.85)}
+@media(max-width:640px){.fcard,.pdx-c{--hc:10px}}
+
+/* Personal Information: tidy arrow-tag titles, aligned grid, bigger photo frame */
+.screen[data-screen=about] .pdx-t{display:inline-flex!important;align-items:center;width:fit-content;max-width:100%;padding:2px 20px 2px 8px;margin-bottom:6px;
+ background:linear-gradient(90deg,rgba(150,120,255,.28),rgba(150,120,255,.06));border-left:2px solid var(--hb);
+ clip-path:polygon(0 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,0 100%)}
+.screen[data-screen=about] .pdx{background-image:radial-gradient(rgba(190,172,255,.14) 1px,transparent 1.3px);background-size:20px 20px}
+.screen[data-screen=about] .pdx-ph{position:relative;overflow:visible;clip-path:none;border:0;background:none}
+.screen[data-screen=about] .pdx-ph::before,.screen[data-screen=about] .pdx-ph::after{content:"";position:absolute;width:16px;height:16px;pointer-events:none;z-index:2}
+.screen[data-screen=about] .pdx-ph::before{left:-4px;top:-4px;border-left:2px solid var(--hb);border-top:2px solid var(--hb)}
+.screen[data-screen=about] .pdx-ph::after{right:-4px;bottom:-4px;border-right:2px solid var(--hb);border-bottom:2px solid var(--hb)}
+@media(min-width:1181px){
+ /* one shared split so every edge lines up: left block = columns 1-7, right block = 8-12 */
+ .screen[data-screen=about] .pdx-id{grid-column:1/8;grid-row:2/4}
+ .screen[data-screen=about] .pdx-ph2{grid-column:8/-1;grid-row:2}
+ .screen[data-screen=about] .pdx-ac{grid-column:8/-1;grid-row:3}
+ .screen[data-screen=about] .pdx-ct{grid-column:1/6;grid-row:4}
+ .screen[data-screen=about] .pdx-tk{grid-column:6/8;grid-row:4}
+ .screen[data-screen=about] .pdx-in{grid-column:8/-1;grid-row:4}
+}
+
+/* ===== motion ===== */
+@keyframes hudIn{from{opacity:0;filter:blur(6px) brightness(1.6)}to{opacity:1;filter:none}}
+@keyframes hudSweep{0%{transform:translateX(-120%)}55%,100%{transform:translateX(900%)}}
+@keyframes hudPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes hudDots{to{background-position:20px 20px}}
+@keyframes hudBar{0%,100%{background-size:var(--hc) var(--hc),var(--hc) var(--hc),48px 3px,100% 100%}50%{background-size:var(--hc) var(--hc),var(--hc) var(--hc),84px 3px,100% 100%}}
+.screen[data-screen=about].active .pdx-c,.screen[data-screen=family].active .fcard{animation:hudIn .55s cubic-bezier(.2,.8,.2,1) both,hudBar 5s ease-in-out 1s infinite}
+.screen[data-screen=about].active .pdx-h{animation-delay:0s,1s}
+.screen[data-screen=about].active .pdx-id{animation-delay:.08s,1.3s}
+.screen[data-screen=about].active .pdx-ph2{animation-delay:.16s,1.6s}
+.screen[data-screen=about].active .pdx-ac{animation-delay:.24s,1.9s}
+.screen[data-screen=about].active .pdx-ct{animation-delay:.32s,2.2s}
+.screen[data-screen=about].active .pdx-tk{animation-delay:.4s,2.5s}
+.screen[data-screen=about].active .pdx-in{animation-delay:.48s,2.8s}
+.screen[data-screen=family].active .fc-mother{animation-delay:0s,1s}
+.screen[data-screen=family].active .fc-father{animation-delay:.1s,1.4s}
+.screen[data-screen=family].active .fc-sib{animation-delay:.2s,1.8s}
+.screen[data-screen=family].active .fc-friends{animation-delay:.3s,2.2s}
+.screen[data-screen=about].active .pdx{animation:hudDots 14s linear infinite}
+.screen[data-screen=about] .pdx-ph::before,.screen[data-screen=about] .pdx-ph::after{animation:hudPulse 2.6s ease-in-out infinite}
+.screen[data-screen=about] .pdx-h::after{content:"";position:absolute;top:0;bottom:0;left:0;width:70px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(215,200,255,.2),transparent);animation:hudSweep 7s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){
+ .screen .pdx-c,.screen .fcard,.screen .pdx,.screen .pdx-h::after,.screen .pdx-ph::before,.screen .pdx-ph::after{animation:none!important}
+}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
