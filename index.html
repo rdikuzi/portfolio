@@ -1104,6 +1104,16 @@ html body .home-hero-portrait::after{-webkit-mask-image:none!important;mask-imag
 /* homepage photo stays perfectly still: fixed box from first paint, no transform, no animation */
 html body #titleScreen .hero-portrait,html body #titleScreen .hero-portrait *{animation:none!important;transition:none!important}
 html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/1500!important}
+
+/* friends: single group photo, shown whole (no crop) */
+.fc-friends .ftext{flex:1 1 0}
+.fc-friends .fphoto img{aspect-ratio:2048/1536}
+@media(max-width:640px){
+ .fc-friends{flex-direction:row}
+ .fc-friends .fphoto{height:auto;width:100%;align-self:auto}
+ .fc-friends{flex-direction:column}
+ .fc-friends .fphoto img{width:100%;max-width:100%;height:auto;max-height:none}
+}
 </style></head>
 <body>
 <div aria-hidden="true" id="sigilBackdrop">
@@ -1160,8 +1170,7 @@ html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/
 <article class="fcard fc-mother"><figure class="fphoto"><img src="img/family-mother.webp" alt="Reba hugging her mother" decoding="async"/></figure><div class="ftext"><span class="fkick">01 · MOTHER</span><h3>A Mother&#8217;s Love</h3><p>Behind every step of my journey is a mother&#8217;s love, care, and support. This moment captures a simple but meaningful embrace with someone who holds a special place in my life.</p></div></article>
 <article class="fcard fc-father"><figure class="fphoto"><img src="img/family-father.webp" alt="Reba shaking hands with her father at an aquarium" decoding="async"/></figure><div class="ftext"><span class="fkick">02 · FATHER</span><h3>A Bond of Respect</h3><p>A meaningful moment shared with my father, symbolizing respect, connection, and appreciation. A simple handshake that represents a bond I will always value.</p></div></article>
 <article class="fcard fc-sib"><figure class="fphoto"><img src="img/family-only-child.webp" alt="Reba standing alone, wearing a black jacket" decoding="async"/></figure><div class="ftext"><span class="fkick">03 · SIBLINGS</span><h3>An Only Child</h3><p>An only child, with a journey of my own. Although I do not have siblings, the experiences and relationships I build with the people around me remain meaningful parts of my life.</p></div></article>
-<article class="fcard fc-friends"><div class="ftext"><span class="fkick">04 · FRIENDS</span><h3>The People Along the Way</h3><p>Life becomes more meaningful with the people who share its moments. My friends are part of the memories, experiences, and stories that make my journey special.</p></div>
-<div class="fcar" id="fCar" aria-label="Friends photo carousel"><div class="fcar-view"><ul class="fcar-track" id="fTrack"><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-01.webp)"></i><img src="img/friends-01.webp" alt="Reba with friends, photo 1 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-02.webp)"></i><img src="img/friends-02.webp" alt="Reba with friends, photo 2 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-03.webp)"></i><img src="img/friends-03.webp" alt="Reba with friends, photo 3 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-04.webp)"></i><img src="img/friends-04.webp" alt="Reba with friends, photo 4 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-05.webp)"></i><img src="img/friends-05.webp" alt="Reba with friends, photo 5 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-06.webp)"></i><img src="img/friends-06.webp" alt="Reba with friends, photo 6 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-07.webp)"></i><img src="img/friends-07.webp" alt="Reba with friends, photo 7 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-08.webp)"></i><img src="img/friends-08.webp" alt="Reba with friends, photo 8 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-09.webp)"></i><img src="img/friends-09.webp" alt="Reba with friends, photo 9 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-10.webp)"></i><img src="img/friends-10.webp" alt="Reba with friends, photo 10 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-11.webp)"></i><img src="img/friends-11.webp" alt="Reba with friends, photo 11 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-12.webp)"></i><img src="img/friends-12.webp" alt="Reba with friends, photo 12 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-13.webp)"></i><img src="img/friends-13.webp" alt="Reba with friends, photo 13 of 14"decoding="async"/></span></li><li class="fslide"><span class="fframe"><i class="fbg" style="background-image:url(img/friends-14.webp)"></i><img src="img/friends-14.webp" alt="Reba with friends, photo 14 of 14"decoding="async"/></span></li></ul></div></div></article>
+<article class="fcard fc-friends"><figure class="fphoto"><img src="img/friends-group.webp" alt="Reba with her friends on a staircase, smiling and posing together" decoding="async"/></figure><div class="ftext"><span class="fkick">04 · FRIENDS</span><h3>The People Along the Way</h3><p>Life becomes more meaningful with the people who share its moments. My friends are part of the memories, experiences, and stories that make my journey special.</p></div></article>
 </div></div></section>
 <div aria-label="Screen navigation" id="screenPager"><button class="pbtn" id="pagerPrev" type="button"><i>◀</i><span class="lbl">BACK</span><kbd>←</kbd></button><div class="stage"><span class="stage-label">STAGE <b id="pagerCount">01/11</b></span><div class="stage-bar" id="stageBar"></div></div><button class="pbtn" id="pagerNext" type="button"><span class="lbl" id="pagerNextText">NEXT</span><i>▶</i><kbd>→</kbd></button></div><footer class="bottom-status"><span>SYSTEM STATUS: <strong>ONLINE</strong></span><span>RDS · PERSONAL PORTFOLIO ARCHIVE</span></footer></main>
 
@@ -1530,7 +1539,7 @@ addEventListener('load',()=>setTimeout(fitActive,100));
 @media(max-width:1100px) and (min-width:901px){.fc-friends .ftext{flex-basis:clamp(130px,30%,190px)}}
 /* sizing safety net: fills the screen when there is room, scrolls (never clips) when there is not */
 .ff-stage{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(150,120,255,.4) transparent}
-.ffgrid{position:relative;inset:auto;height:100%;--rmin:200px;grid-template-rows:repeat(2,minmax(var(--rmin),1fr))}
+.ffgrid{position:relative;inset:auto;height:100%;--rmin:200px;grid-template-rows:minmax(var(--rmin),.92fr) minmax(var(--rmin),1.08fr)}
 @media(max-width:1180px){
  .ffgrid{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(4,minmax(var(--rmin),1fr));--rmin:200px}
 }
@@ -1579,6 +1588,16 @@ html body .home-hero-portrait::after{-webkit-mask-image:none!important;mask-imag
 /* homepage photo stays perfectly still: fixed box from first paint, no transform, no animation */
 html body #titleScreen .hero-portrait,html body #titleScreen .hero-portrait *{animation:none!important;transition:none!important}
 html body #titleScreen .hero-portrait img{width:auto!important;aspect-ratio:450/1500!important}
+
+/* friends: single group photo, shown whole (no crop) */
+.fc-friends .ftext{flex:1 1 0}
+.fc-friends .fphoto img{aspect-ratio:2048/1536}
+@media(max-width:640px){
+ .fc-friends{flex-direction:row}
+ .fc-friends .fphoto{height:auto;width:100%;align-self:auto}
+ .fc-friends{flex-direction:column}
+ .fc-friends .fphoto img{width:100%;max-width:100%;height:auto;max-height:none}
+}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
