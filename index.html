@@ -1503,12 +1503,18 @@ addEventListener('load',()=>setTimeout(fitActive,100));
 
 <script id="pdx-fit2">(function(){var st=document.querySelector('[data-screen=about] .pstage'),d=st&&st.querySelector('.pdx');if(!d)return;var cache={};
 function apply(b){d.style.width=b.w+'px';d.style.zoom=b.s;d.style.left=Math.max(0,(st.clientWidth/b.s-b.w)/2)+'px'}
-function fit(){var W=st.clientWidth,H=st.clientHeight;if(!W||!H)return;var key=W+'x'+H;if(cache[key]){apply(cache[key]);return}
+function good(b){return b&&isFinite(b.s)&&b.s>0.05&&isFinite(b.w)&&b.w>=900}
+function fit(){try{var W=st.clientWidth,H=st.clientHeight;if(!W||!H)return;var key=W+'x'+H;if(good(cache[key])){apply(cache[key]);return}
 d.style.zoom=1;d.style.left='0px';var best=null,lo=900,hi=2600;
 while(hi-lo>40){var m=Math.round((lo+hi)/2/10)*10;d.style.width=m+'px';if(m*H>=W*d.scrollHeight)hi=m;else lo=m}
-[lo-40,lo,hi,hi+40].forEach(function(w){if(w<900||w>2600)return;d.style.width=w+'px';var h=d.scrollHeight,s=Math.min(W/w,H/h)*.97;if(!best||s>best.s)best={s:s,w:w}});
-apply(best);for(var k=0;k<5;k++){var bt=d.getBoundingClientRect().bottom-st.getBoundingClientRect().top;if(bt<=H)break;best.s*=H/bt*.98;apply(best)}cache[key]=best}
-window._pdxFit=function(){cache={};fit()};if(window.ResizeObserver)new ResizeObserver(fit).observe(st);window.addEventListener('resize',fit);window.addEventListener('load',fit);})();</script>
+[lo-40,lo,hi,hi+40].forEach(function(w){if(w<900||w>2600)return;d.style.width=w+'px';var h=d.scrollHeight||1,s=Math.min(W/w,H/h)*.97;if(isFinite(s)&&s>0&&(!best||s>best.s))best={s:s,w:w}});
+if(!best)best={s:Math.min(1,W/1500)*.9,w:1500};
+apply(best);for(var k=0;k<5;k++){var bt=d.getBoundingClientRect().bottom-st.getBoundingClientRect().top;if(!(bt>H))break;best.s*=H/bt*.98;apply(best)}
+if(good(best))cache[key]=best}catch(e){try{d.style.width='1500px';d.style.zoom=Math.max(.3,Math.min(1,st.clientWidth/1500))}catch(_){}}}
+window._pdxFit=function(){cache={};fit()};
+if(window.ResizeObserver)new ResizeObserver(fit).observe(st);window.addEventListener('resize',fit);window.addEventListener('load',fit);
+/* watchdog: if the layout ever shows up collapsed (never fitted), fit it again */
+setInterval(function(){if(st.clientWidth&&(!d.style.width||d.getBoundingClientRect().width<300))fit()},700);})();</script>
 <style id="ff-style">/* ===== FAMILY & FRIENDS: one-screen 2x2 memory archive ===== */
 [data-screen=family] .zoom,[data-screen=family] img{cursor:default}
 .screen[data-screen=family] .ff-head{margin-bottom:clamp(6px,1.2vh,12px);flex:0 0 auto}
@@ -2157,6 +2163,9 @@ html.sc-measure #app *,html.sc-measure #app{animation:none!important;transition:
 /* never show a native play / controls overlay on background videos */
 #pgBg video,#vtVid{pointer-events:none!important;-webkit-tap-highlight-color:transparent}
 video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit-media-controls-start-playback-button,video::-webkit-media-controls-overlay-play-button,video::-webkit-media-controls-play-button,video::-webkit-media-controls-enclosure{display:none!important;opacity:0!important;-webkit-appearance:none}
+
+/* safety net: Personal Info can never collapse to a thin column even if the fit script has not run yet */
+[data-screen=about] .pdx{width:1500px;min-width:900px;zoom:.6}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
