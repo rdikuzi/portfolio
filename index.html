@@ -2235,6 +2235,11 @@ video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit
 [data-screen=about] .hx-astro .zs-sym{font-size:1.1rem!important;line-height:1!important}
 [data-screen=about] .hx-astro .zs-g{margin:0!important}
 }
+
+/* if the browser refuses to autoplay, keep the still image gently moving until playback is allowed */
+@keyframes pgKb{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(1.13) translate3d(-2.2%,-1.6%,0)}}
+#pgBg .pgv.kb{animation:pgKb 16s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){#pgBg .pgv.kb{animation:none}}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
@@ -2480,9 +2485,10 @@ video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit
 (function(){
  /* if a browser blocked autoplay, retry silently on the first input or when data arrives (no play button is ever shown) */
  function kick(){document.querySelectorAll('#pgBg video,#vtVid').forEach(function(v){if(v.paused&&(v._want||v.id==='vtVid')){var p=v.play();if(p&&p.catch)p.catch(function(){})}})}
- ['pointerdown','touchstart','keydown','click'].forEach(function(e){document.addEventListener(e,kick,{passive:true,capture:true})});
+ ['pointerdown','pointerup','touchstart','touchend','keydown','click','mousemove','wheel','scroll'].forEach(function(e){document.addEventListener(e,function(){if(window._bgBlocked)kick()},{passive:true,capture:true})});['pointerdown','touchend','click','keydown'].forEach(function(e){document.addEventListener(e,kick,{passive:true,capture:true})});
  document.querySelectorAll('#pgBg video').forEach(function(v){v.addEventListener('playing',function(){if(v._want){v.classList.add('on');v._w.classList.add('on')}});['loadeddata','canplay'].forEach(function(e){v.addEventListener(e,function(){if(v._want)kick()})})});
- setInterval(kick,1500);
+ var pt=0;setInterval(function(){kick();var any=false,blocked=false;Object.keys(window._vids||{}).forEach(function(k){var v=window._vids[k];if(!v._want)return;any=true;if(v.paused||v.readyState<3){blocked=true;v._pc=(v._pc||0)+1}else{v._pc=0}v._w.classList.toggle('kb',v._pc>=2)});window._bgBlocked=any&&blocked},900);
+ document.addEventListener('visibilitychange',kick);window.addEventListener('pageshow',kick);
 })();
 /* sidebar -> header: brand + nav tabs move into the top bar */
 (function(){var tb=document.querySelector('.workspace>.topbar'),br=document.querySelector('.sidebar .side-brand'),nav=document.getElementById('sideNav');if(!tb||!br||!nav)return;
