@@ -1508,10 +1508,10 @@ function good(b){return b&&isFinite(b.s)&&b.s>0.05&&isFinite(b.w)&&b.w>=900}
 function reset(d){if(ZOOM)d.style.zoom=1;else d.style.transform='none';d.style.left='0px'}
 function fit(){try{var n=nodes();if(!n||!n.d)return;var st=n.st,d=n.d,W=st.clientWidth,H=st.clientHeight;if(!W||!H)return;var key=W+'x'+H;if(good(cache[key])){apply(n,cache[key]);return}
 reset(d);var best=null,lo=900,hi=2600;
-while(hi-lo>40){var m=Math.round((lo+hi)/2/10)*10;d.style.width=m+'px';if(m*H>=W*d.scrollHeight)hi=m;else lo=m}
-[lo-40,lo,hi,hi+40].forEach(function(w){if(w<900||w>2600)return;d.style.width=w+'px';var h=d.scrollHeight||1,s=Math.min(W/w,H/h)*.97;if(isFinite(s)&&s>0&&(!best||s>best.s))best={s:s,w:w}});
+while(hi-lo>10){var m=Math.round((lo+hi)/2/10)*10;d.style.width=m+'px';if(m*H>=W*d.scrollHeight)hi=m;else lo=m}
+[lo-30,lo-20,lo-10,lo,hi,hi+10,hi+20,hi+30].forEach(function(w){if(w<900||w>2600)return;d.style.width=w+'px';var h=d.scrollHeight||1,s=Math.min(W/w,H/h)*.995;if(isFinite(s)&&s>0&&(!best||s>best.s))best={s:s,w:w}});
 if(!best)best={s:Math.min(1,W/1500)*.9,w:1500};
-apply(n,best);for(var k=0;k<5;k++){var bt=d.getBoundingClientRect().bottom-st.getBoundingClientRect().top;if(!(bt>H))break;best.s*=H/bt*.98;apply(n,best)}
+apply(n,best);for(var k=0;k<5;k++){var bt=d.getBoundingClientRect().bottom-st.getBoundingClientRect().top;if(!(bt>H))break;best.s*=H/bt*.99;apply(n,best)}
 if(good(best))cache[key]=best}catch(e){try{var q=nodes();q.d.style.width='1500px';if(ZOOM)q.d.style.zoom=Math.max(.3,Math.min(1,q.st.clientWidth/1500))}catch(_){}}}
 window._pdxFit=function(){cache={};fit()};
 var n0=nodes();if(window.ResizeObserver&&n0)new ResizeObserver(fit).observe(n0.st);window.addEventListener('resize',fit);window.addEventListener('load',fit);
@@ -2168,6 +2168,49 @@ video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit
 
 /* safety net: Personal Info can never collapse to a thin column even if the fit script has not run yet */
 [data-screen=about] .pdx{width:1500px;min-width:900px;transform:scale(.6);transform-origin:0 0}
+
+/* ===== sidebar becomes a header (desktop) ===== */
+@media (min-width:901px){
+#app{grid-template-columns:minmax(0,1fr)!important}
+.sidebar{display:none!important}
+.hdr-left{display:flex;align-items:center;gap:22px;min-width:0;flex:1 1 auto}
+.hdr-left .side-brand{padding:0!important;border:0!important;font-size:1.25rem!important;gap:8px;flex:none}
+.hdr-left .nav-list{display:flex!important;gap:4px;flex-wrap:nowrap}
+.hdr-left .nav-list button{display:inline-flex;gap:8px;padding:8px 14px!important;border:1px solid transparent!important;border-radius:4px;white-space:nowrap;font-size:12px!important;letter-spacing:.09em}
+.hdr-left .nav-list button .num{color:var(--accent)}
+.hdr-left .nav-list button:hover{border-color:rgba(190,175,255,.3)!important;background:rgba(169,189,255,.08)}
+.hdr-left .nav-list button.active{border-color:rgba(205,190,255,.55)!important;background:linear-gradient(180deg,rgba(150,120,255,.28),rgba(90,70,190,.2));color:#fff}
+.topbar .crumb{display:none!important}
+.topbar{padding:8px 20px!important;min-height:0}
+.top-actions button{min-height:36px!important}
+/* reclaim vertical space */
+.bottom-status{display:none!important}
+#screenPager{padding:6px 20px!important}
+#screenPager .action,#screenPager button{min-height:44px}
+.screen{padding-left:clamp(10px,1.4vw,20px)!important;padding-right:clamp(10px,1.4vw,20px)!important}
+[data-screen=about].screen{padding-top:8px!important;padding-bottom:6px!important}
+}
+@media (min-width:901px){
+[data-screen=about] .pdx-h .pdx-ph{--pw:100px!important;width:100px!important;height:auto!important}
+[data-screen=about] .pdx-h{padding:6px 14px!important;gap:14px!important}
+[data-screen=about] .pdx-h .pdx-m,[data-screen=about] .pdx-h p{margin-top:2px!important;margin-bottom:0!important}
+[data-screen=about] .pdx-col>.hx-in{padding:5px 8px!important;align-items:center}
+[data-screen=about] .pdx-col>.hx-in .pdx-t{margin:0 8px 0 0!important}
+}
+@media (max-width:900px){.hdr-left{display:none!important}}
+@media (max-width:900px){
+[data-screen=about] .pdx-h{flex-direction:column!important;align-items:flex-start!important;gap:8px!important}
+[data-screen=about] .pdx-h>*{width:100%!important;max-width:100%!important;flex:none!important;min-width:0}
+[data-screen=about] .pdx-h .pdx-ph{width:90px!important;height:auto!important}
+[data-screen=about] .pdx-h h2{font-size:1.4rem!important}
+[data-screen=about] .hx .pdx-i dd{word-break:normal!important;overflow-wrap:anywhere}
+}
+@media (max-width:900px){
+[data-screen=about] .pdx-h h2,[data-screen=about] .pdx-h .pdx-n{text-align:left!important}
+[data-screen=about] .pdx-h .pdx-ph{align-self:flex-start}
+[data-screen=about] .hx .pdx-i{flex-wrap:wrap!important}
+[data-screen=about] .hx .pdx-i dd{overflow-wrap:break-word!important}
+}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
@@ -2417,6 +2460,9 @@ video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit
  document.querySelectorAll('#pgBg video').forEach(function(v){v.addEventListener('playing',function(){if(v._want)v.classList.add('on')});['loadeddata','canplay'].forEach(function(e){v.addEventListener(e,function(){if(v._want)kick()})})});
  setInterval(kick,1500);
 })();
+/* sidebar -> header: brand + nav tabs move into the top bar */
+(function(){var tb=document.querySelector('.workspace>.topbar'),br=document.querySelector('.sidebar .side-brand'),nav=document.getElementById('sideNav');if(!tb||!br||!nav)return;
+ var wrap=document.createElement('div');wrap.className='hdr-left';wrap.appendChild(br);wrap.appendChild(nav);tb.insertBefore(wrap,tb.firstChild);document.documentElement.classList.add('hdr-nav')})();
 
 (function(){
  var AC,M,R,duck=1,NB;
