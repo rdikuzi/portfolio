@@ -2240,6 +2240,19 @@ video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit
 @keyframes pgKb{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(1.13) translate3d(-2.2%,-1.6%,0)}}
 #pgBg .pgv.kb{animation:pgKb 16s ease-in-out infinite alternate}
 @media (prefers-reduced-motion:reduce){#pgBg .pgv.kb{animation:none}}
+
+/* animated WebP stand-in: shown only while the browser refuses to play the video */
+#pgBg .pgv img.pgi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease;pointer-events:none}
+#pgBg .pgv.fb img.pgi{opacity:1}
+#pgBg .pgv.fb.kb{animation:none}
+@media (min-width:901px){
+/* sign cards become one compact row */
+[data-screen=about] .hx-astro .zs-card{display:inline-flex!important;flex-direction:row!important;align-items:baseline!important;gap:8px!important;padding:3px 10px!important;min-height:0!important;height:auto!important;width:auto!important;flex:0 1 auto!important}
+[data-screen=about] .hx-astro .zs-card b{font-size:14px!important}
+[data-screen=about] .hx-astro .zs-card em{display:none}
+[data-screen=about] .hx-astro .zs-sym{font-size:14px!important}
+[data-screen=about] .hx-astro .zs-k{font-size:10.5px!important}
+}
 </style>
 <script id="ff-js">(function(){
  var track=document.getElementById('fTrack'); if(!track)return;
@@ -2487,7 +2500,10 @@ video::-webkit-media-controls,video::-webkit-media-controls-panel,video::-webkit
  function kick(){document.querySelectorAll('#pgBg video,#vtVid').forEach(function(v){if(v.paused&&(v._want||v.id==='vtVid')){var p=v.play();if(p&&p.catch)p.catch(function(){})}})}
  ['pointerdown','pointerup','touchstart','touchend','keydown','click','mousemove','wheel','scroll'].forEach(function(e){document.addEventListener(e,function(){if(window._bgBlocked)kick()},{passive:true,capture:true})});['pointerdown','touchend','click','keydown'].forEach(function(e){document.addEventListener(e,kick,{passive:true,capture:true})});
  document.querySelectorAll('#pgBg video').forEach(function(v){v.addEventListener('playing',function(){if(v._want){v.classList.add('on');v._w.classList.add('on')}});['loadeddata','canplay'].forEach(function(e){v.addEventListener(e,function(){if(v._want)kick()})})});
- var pt=0;setInterval(function(){kick();var any=false,blocked=false;Object.keys(window._vids||{}).forEach(function(k){var v=window._vids[k];if(!v._want)return;any=true;if(v.paused||v.readyState<3){blocked=true;v._pc=(v._pc||0)+1}else{v._pc=0}v._w.classList.toggle('kb',v._pc>=2)});window._bgBlocked=any&&blocked},900);
+ var pt=0;setInterval(function(){kick();var any=false,blocked=false,now=Date.now();Object.keys(window._vids||{}).forEach(function(k){var v=window._vids[k];if(!v._want){v._wa=0;v._st=0;return}
+  any=true;if(!v._wa)v._wa=now;var adv=v.currentTime>(v._lt||0)+0.02||(v._lt>0.5&&v.currentTime<v._lt-0.5);v._lt=v.currentTime;
+  if(adv&&!v.paused){v._st=0;v._w.classList.remove('fb','kb')}else if(now-v._wa>2500){v._st=(v._st||0)+1;blocked=true;if(v._st>=2){var im=v._w.querySelector('img.pgi');if(!im){im=document.createElement('img');im.className='pgi';im.alt='';im.decoding='async';v._w.appendChild(im)}if(!im.getAttribute('src'))im.src='img/bg-'+({about:'flower',achievements:'birds',family:'eyes'})[k]+'.webp';v._w.classList.add('fb')}}
+ });window._bgBlocked=any&&blocked},900);
  document.addEventListener('visibilitychange',kick);window.addEventListener('pageshow',kick);
 })();
 /* sidebar -> header: brand + nav tabs move into the top bar */
